@@ -52,3 +52,20 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio
+.vs/
+*.vsidx
+
+# Binaries and intermediate files
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+
+# C# specific files
+*.suo
+*.user
+
+# Other common files to ignore
+.vs/
