@@ -1,5 +1,6 @@
 ﻿using IWantApp.Domain.Products;
 using IWantApp.Infra.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace IWantApp.Endpoints.Categories;
 
@@ -11,14 +12,19 @@ public class CategoryPost
     public static Delegate Handle => Action;
     public static IResult Action(CategoryRequest categoryRequest, ApplicationDbContext context)
     {
-        var category = new Category
+
+        if (string.IsNullOrEmpty(categoryRequest.Name))
+            return Results.BadRequest("Name is required");
+        var category = new Category(categoryRequest.Name, "Test", "Test");
+
+
+        if (!category.IsValid)
         {
-            Name = categoryRequest.Name,
-            CreatedBy = "test",
-            CreatedAt = DateTime.Now,
-            EditedBy = "test",
-            EditedAt = DateTime.Now,
-        };
+            return Results.ValidationProblem(category.Notifications.ConvertToProblemDetails());
+        }
+
+            
+
         context.Categories.Add(category);
         context.SaveChanges();
         return Results.Created($"/categories/{category.Id}", category.Id);
